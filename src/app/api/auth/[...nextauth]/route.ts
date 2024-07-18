@@ -4,7 +4,6 @@ import bcrypt from "bcrypt";
 import connect from "@/utils/db";
 import User from "@/models/User";
 import GoogleProvider from "next-auth/providers/google";
-import { signIn, signOut } from "next-auth/react";
 
 const options: NextAuthOptions = {
   providers: [
@@ -23,42 +22,35 @@ const options: NextAuthOptions = {
       id: "Credentials",
       name: "Credentials",
       credentials: {
-        email: { label: "email", type: "email" },
+        email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
         await connect();
 
-        try {
-          const email = credentials?.email;
-          const password = credentials?.password;
+        const email = credentials?.email;
+        const password = credentials?.password;
 
-          if (!email || !password) {
-            throw new Error("Credenciais incompletas!");
-          }
+        if (!email || !password) {
+          throw new Error("Incomplete credentials!");
+        }
 
-          const user = await User.findOne({ email });
+        const user = await User.findOne({ email });
 
-          if (user) {
-            const validPassword = await bcrypt.compare(password, user.password);
-
-            if (validPassword) {
-              return {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                department: user.department,
-              };
-            } else {
-              throw new Error("Credenciais erradas!");
-            }
+        if (user) {
+          const validPassword = await bcrypt.compare(password, user.password);
+          if (validPassword) {
+            return {
+              id: user._id,
+              name: user.name,
+              email: user.email,
+              department: user.department,
+            };
           } else {
-            throw new Error("Credenciais erradas!");
+            throw new Error("Invalid credentials!");
           }
-        } catch (error) {
-          throw new Error(
-            error instanceof Error ? error.message : "Unknown error"
-          );
+        } else {
+          throw new Error("Invalid credentials!");
         }
       },
     }),
@@ -84,9 +76,8 @@ const options: NextAuthOptions = {
       return session;
     },
   },
-
 };
 
 const handler = NextAuth(options);
 
-export { handler as GET, handler as POST, signIn, signOut };
+export { handler as GET, handler as POST };
