@@ -12,7 +12,7 @@ export default function PageLogin() {
   return (
     <>
       {!session && (
-        <main className="flex min-h-screen flex-col items-center justify-between">
+        <main className="flex min-h-screen flex-col items-center">
           <Image
             src="/images/arthorius.png"
             width={130} 
