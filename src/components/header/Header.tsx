@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
 
 import {
@@ -18,6 +19,9 @@ import {
 import { Button } from "../ui/button";
 import { SheetSide } from "../perfil/sheetMenu/SheetMenu";
 import { NavigationMenuDemo } from "../navigation/Navigation";
+import { Avatar } from "@radix-ui/react-avatar";
+import { AvatarFallback, AvatarImage } from "../ui/avatar";
+import logo from "@/assets/logo/arthorius.svg";
 
 export default function Header() {
   const { data: session } = useSession();
@@ -32,10 +36,11 @@ export default function Header() {
       {session && (
         <div className="flex-grow px-2 flex items-center gap-2">
           <SheetSide />
-          <span className="font-medium	text-sm/[14px]">{`Olá, ${userName}`}</span>
+          <span className="font-medium text-sm/[14px]">{`Olá, ${userName}`}</span>
           <NavigationMenuDemo />
         </div>
       )}
+      
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="icon" className="hidden md:flex">

@@ -23,8 +23,8 @@ import ForgotPasswordForm from "../form-forgot-password/ForgotPassword";
 import FormCodigo from "../form-codigo/FormCodigo";
 import ResetPasswordForm from "../form-reset-password/ResetPassword";
 import { Separator } from "@/components/ui/separator";
-
-
+import { signIn } from "next-auth/react";
+import Image from "next/image";
 const Login = () => {
   const { formLogin, isLoading, onSubmitLogin } = useLogin(); // Use o hook useLogin aqui
   const [activeTab, setActiveTab] = useState("entrar");
@@ -46,9 +46,10 @@ const Login = () => {
             <CardTitle>Faça o Login</CardTitle>
             <CardDescription>
               Caso não tenha conta criada,{" "}
-              <span className="text-[#7C3AED] dark:text-[#F9FAFB]"
+              <span
+                className="text-[#7C3AED] dark:text-[#F9FAFB]"
                 onClick={() => onTabChange("registrar")}
-                style={{cursor: "pointer" }}
+                style={{ cursor: "pointer" }}
               >
                 registre-se
               </span>
@@ -94,7 +95,8 @@ const Login = () => {
                 />
                 <CardDescription>
                   Esqueceu sua senha?{" "}
-                  <span className="text-[#7C3AED] dark:text-[#F9FAFB]"
+                  <span
+                    className="text-[#7C3AED] dark:text-[#F9FAFB]"
                     onClick={() => onTabChange("recuperarSenha")}
                     style={{ cursor: "pointer" }}
                   >
@@ -113,17 +115,32 @@ const Login = () => {
                 </div>
               </form>
             </Form>
-            <div>
-            <Separator className="my-4" />
-          
-            <Button >Entrar com google</Button>
+            <div className="flex flex-col	gap-2">
+              <Separator className="my-4" />
+              <Button
+                className="flex gap-1"
+                onClick={() => onTabChange("registrar")}
+              >
+                Cadastrar
+              </Button>
+              <Button
+                onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+                className="flex gap-1"
+              >
+                <Image
+                  src="/icons/google-logo.svg"
+                  width={25}
+                  height={25}
+                  alt="Logo"
+                />
+                Entrar com google
+              </Button>
+              
             </div>
-      
           </CardHeader>
-         
         </Card>
       </TabsContent>
-     
+
       <TabsContent value="registrar">
         <RegisterForm onTabChange={onTabChange} />
       </TabsContent>
@@ -137,7 +154,6 @@ const Login = () => {
         <ResetPasswordForm onTabChange={onTabChange} />
       </TabsContent>
     </Tabs>
-    
   );
 };
 
